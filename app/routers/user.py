@@ -1,0 +1,45 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.schemas.user import UserCreate, OAuthUserCreate, UserOut
+from app.services.user_service import create_user, create_oauth_user, get_user_by_email
+from app.db.session import get_db
+from fastapi.security import OAuth2PasswordBearer
+from app.services.user_service import get_all_users
+from app.core.auth import verify_token
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+router = APIRouter()
+
+@router.post("/register/", response_model=UserOut)
+def register_user(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return create_user(db=db, user=user)
+
+@router.post("/oauth-register/", response_model=UserOut)
+def oauth_register_user(oauth_user: OAuthUserCreate, db: Session = Depends(get_db)):
+    db_user = get_user_by_email(db, email=oauth_user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return create_oauth_user(db=db, oauth_user=oauth_user)
+
+
+# Initialize router
+router = APIRouter()
+from fastapi import Request
+from app.models.user import User
+
+from app.core.auth import get_current_user_from_token
+
+@router.get("/users/")
+async def get_users(request: Request, db: Session = Depends(get_db)):
+    # Get the current user from the access token in the cookies
+    current_user = get_current_user_from_token(request)
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    # Fetch all users
+    users = db.query(User).all()
+    return users
