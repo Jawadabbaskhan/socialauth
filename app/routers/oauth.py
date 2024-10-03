@@ -42,8 +42,8 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
 
         # Generate JWT token for the user
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
-        refresh_token = create_refresh_token(data={"sub": user.email})
+        access_token = create_access_token(data={"sub": user.email,"role":user.role}, expires_delta=access_token_expires)
+        refresh_token = create_refresh_token(data={"sub": user.email,"role":user.role})
 
         response = JSONResponse(
             content={
@@ -51,7 +51,8 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
                 "user": {
                     "id": user.id,
                     "username": user.username,
-                    "email": user.email
+                    "email": user.email,
+                    "role": user.role
                 },
                 "token": {
                     "access_token": access_token,

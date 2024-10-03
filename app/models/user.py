@@ -12,3 +12,4 @@ class User(Base):
     is_superuser = Column(Boolean, default=False)
     oauth_provider = Column(String, nullable=True)  # E.g., 'google', 'facebook'
     oauth_token = Column(String, nullable=True)  # Stores the OAuth token
+    role = Column(String, nullable=True)  # E.g., 'admin', 'user'
