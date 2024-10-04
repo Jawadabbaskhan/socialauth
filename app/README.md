@@ -51,12 +51,11 @@ This application provides social auth with secure user authentication and role-b
 1. **Clone the Repository**
     ```bash
     git clone https://github.com/yourusername/student-crud-app.git
-    cd student-crud-app
     ```
 2. **Create a Virtual Environment**
     ```bash
     python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scriptsctivate
+    source venv/bin/activate  # On Windows: venv\Scripts\ctivate
     ```
 3. **Install Dependencies**
     ```bash
@@ -80,7 +79,7 @@ This application provides social auth with secure user authentication and role-b
     ```
 
 6. **Access the Application**
-    - Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) to access the API documentation via Swagger UI.
+    - Navigate to [http://127.0.0.1:8000/docs](http://127.0.0.1:8000)/docs to access the API documentation via Swagger UI.
 
 ## Implementation Details
 
@@ -131,6 +130,3 @@ The application complies with several OWASP standards, including:
 - **Vulnerability Testing**:
   - Use `OWASP ZAP` and `Nikto` for vulnerability testing. These tools can help identify security misconfigurations, SQL injection points, and other vulnerabilities.
 
-
-## License
-This project is licensed under the MIT License.
