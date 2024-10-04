@@ -49,34 +49,35 @@ This application provides social auth with secure user authentication and role-b
 
 ### Installation
 1. **Clone the Repository**
-    \`\`\`bash
-    git clone git@github.com:Jawadabbaskhan/socialauth.git
-    \`\`\`
+    ```bash
+    git clone https://github.com/yourusername/student-crud-app.git
+    cd student-crud-app
+    ```
 2. **Create a Virtual Environment**
-    \`\`\`bash
+    ```bash
     python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    \`\`\`
+    source venv/bin/activate  # On Windows: venv\Scriptsctivate
+    ```
 3. **Install Dependencies**
-    \`\`\`bash
+    ```bash
     pip install -r requirements.txt
-    \`\`\`
+    ```
 
 4. **Set Up Environment Variables**
     - Create a `.env` file in the root directory and add the necessary environment variables:
-      \`\`\`env
+      ```env
       SECRET_KEY=your-secret-key
       ALGORITHM=HS256
       ACCESS_TOKEN_EXPIRE_MINUTES=30
       GOOGLE_CLIENT_ID=your-google-client-id
       GOOGLE_CLIENT_SECRET=your-google-client-secret
       OAUTH_REDIRECT_URI=http://127.0.0.1:8000/api/v1/oauth/callback
-      \`\`\`
+      ```
 
 5. **Run the Application**
-    \`\`\`bash
+    ```bash
     uvicorn app.main:app --reload
-    \`\`\`
+    ```
 
 6. **Access the Application**
     - Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) to access the API documentation via Swagger UI.
