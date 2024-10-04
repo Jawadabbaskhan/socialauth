@@ -1,7 +1,7 @@
 
-# Student CRUD Application with Secure Authentication and Authorization
+# Social Auth Application with Secure Authentication and Authorization
 
-This project implements a secure student management application using FastAPI, featuring OAuth2 authentication, JWT-based session management, role-based access control, CSRF protection, input validation, and more. The application follows best practices in line with OWASP security standards.
+This project implements a secure social auth management application using FastAPI, featuring OAuth2 authentication, JWT-based session management, role-based access control, CSRF protection, input validation, and more. The application follows best practices in line with OWASP security standards.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -21,7 +21,7 @@ This project implements a secure student management application using FastAPI, f
 - [License](#license)
 
 ## Overview
-This application provides a CRUD interface for managing student data with secure user authentication and role-based access control. It uses Google OAuth2 for user authentication and JWTs for session management. The application also incorporates several security features, including CSRF protection, rate limiting, and input validation, to mitigate common web application vulnerabilities.
+This application provides social auth with secure user authentication and role-based access control. It uses Google OAuth2 for user authentication and JWTs for session management. The application also incorporates several security features, including CSRF protection, rate limiting, and input validation, to mitigate common web application vulnerabilities.
 
 ## Features
 - User authentication using Google OAuth2.
@@ -50,8 +50,7 @@ This application provides a CRUD interface for managing student data with secure
 ### Installation
 1. **Clone the Repository**
     \`\`\`bash
-    git clone https://github.com/yourusername/student-crud-app.git
-    cd student-crud-app
+    git clone git@github.com:Jawadabbaskhan/socialauth.git
     \`\`\`
 2. **Create a Virtual Environment**
     \`\`\`bash
