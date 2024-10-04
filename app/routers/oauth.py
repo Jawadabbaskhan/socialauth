@@ -1,34 +1,33 @@
+from datetime import timedelta
 from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from starlette.responses import RedirectResponse
+
+from app.core.auth import create_access_token, create_refresh_token,generate_csrf_token
+
+from app.core.config import settings
 from app.core.oauth import oauth
 from app.services.user_service import create_oauth_user, get_user_by_email
 from app.schemas.user import OAuthUserCreate
 from app.db.session import get_db
-from starlette.responses import RedirectResponse
 
-from app.core.auth import create_access_token, create_refresh_token
-from datetime import timedelta
-from app.core.config import settings
 
-from fastapi.responses import JSONResponse
 router = APIRouter()
 
-# OAuth Login with Google
+
 @router.get("/login/google")
 async def google_login(request: Request):
     redirect_uri = request.url_for('google_callback')
-    print("\n\n\n\nRedirect URI:", redirect_uri)  # Debugging line
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
 @router.get("/callback")
-
 async def google_callback(request: Request, db: Session = Depends(get_db)):
     try:
         token = await oauth.google.authorize_access_token(request)
         user_info = await oauth.google.userinfo(token=token)
 
-        # Check if the user exists in the database
         user_email = user_info['email']
         user = get_user_by_email(db, email=user_email)
         if not user:
@@ -40,10 +39,10 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
             )
             user = create_oauth_user(db, oauth_user=oauth_user)
 
-        # Generate JWT token for the user
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(data={"sub": user.email,"role":user.role}, expires_delta=access_token_expires)
         refresh_token = create_refresh_token(data={"sub": user.email,"role":user.role})
+        csrf_token = generate_csrf_token()
 
         response = JSONResponse(
             content={
@@ -60,26 +59,37 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
                 }
             }
         )
-        # Set HTTP-only cookies for access and refresh tokens
+        
         response.set_cookie(
             key="access_token",
             value=access_token,
             httponly=True,
             max_age=1800,
-            secure=False,  # Set this to True if using HTTPS
+            secure=False,
             samesite="Lax",
-            path="/"  # Ensure the cookie is accessible to all routes
+            path="/" 
+        
         )
         response.set_cookie(
             key="refresh_token",
             value=refresh_token,
             httponly=True,
             max_age=86400,
-            secure=False,  # Set this to True if using HTTPS
+            secure=False,
             samesite="Lax",
-            path="/"  # Ensure the cookie is accessible to all routes
+            path="/"
         )
 
+        response.set_cookie(
+        key="csrf_token",
+        value=csrf_token,
+        httponly=True,
+        max_age=1800,
+        secure=False,
+        samesite="Lax",
+        path="/"
+        )
+        
         return response
 
 
