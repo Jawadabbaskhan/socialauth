@@ -129,10 +129,7 @@ The application complies with several OWASP standards, including:
   - Use `Locust` to simulate concurrent users and stress-test the application. This will help identify performance bottlenecks and ensure scalability.
 - **Vulnerability Testing**:
   - Use `OWASP ZAP` and `Nikto` for vulnerability testing. These tools can help identify security misconfigurations, SQL injection points, and other vulnerabilities.
-- **Implement Secure Communication (HTTPS)**:
-  - Obtain and configure SSL/TLS certificates to enforce HTTPS for all communication, protecting data in transit.
-- **Enhance Logging and Monitoring**:
-  - Set up centralized logging (e.g., ELK Stack, Graylog) to monitor security events like login attempts, failed access control checks, and rate limit violations.
+
 
 ## License
 This project is licensed under the MIT License.
