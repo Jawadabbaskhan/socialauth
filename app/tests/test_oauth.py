@@ -1,12 +1,12 @@
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from app.main import app as real_app  # Import the actual app
-from app.routers import oauth  # Import your routes
+from app.main import app as real_app
+from app.routers import oauth
 
-# Create a test app without the custom middleware
+
 test_app = FastAPI()
-test_app.include_router(oauth.router)  # Add your routes to the test app
+test_app.include_router(oauth.router)
 
 client = TestClient(test_app)
 

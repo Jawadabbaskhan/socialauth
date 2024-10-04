@@ -1,14 +1,15 @@
 from jose import JWTError, jwt
-from app.db.session import get_db
-from app.models.user import User
-from app.core.config import settings
 from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
+from app.db.session import get_db
+from app.models.user import User
+from app.core.config import settings
+
+
 class RoleBasedAccessControlMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # List of URLs that do not require authorization
         no_auth_urls = [
             "/token",
             "/docs",
@@ -17,7 +18,6 @@ class RoleBasedAccessControlMiddleware(BaseHTTPMiddleware):
             "/api/v1/oauth/callback"
         ]
 
-        # Check if the request URL is in the no_auth_urls list
         if request.url.path in no_auth_urls:
             return await call_next(request)
 
@@ -29,16 +29,13 @@ class RoleBasedAccessControlMiddleware(BaseHTTPMiddleware):
             token = token.split(" ")[1]
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
             user_email: str = payload.get("sub")
-            print("\n\n\n\nUser Email:", user_email)  # Debugging line
             user_role: str = payload.get("role")
-            print("\n\n\n\nUser Role:", user_role)  # Debugging line
-
+            
             if user_email is None or user_role is None:
                 raise JSONResponse(status_code=401, content={"detail": "Unauthorized: Invalid token"})
 
             db = next(get_db())
             user = db.query(User).filter(User.email == user_email).first()
-            print("\n\n\n\nUser:", user)  # Debugging line
             if user is None:
                 raise JSONResponse(status_code=401, content={"detail": "Unauthorized: User not found"})
 

@@ -1,17 +1,18 @@
-from fastapi import FastAPI
-from app.routers import user,oauth,product
-
-from starlette.middleware.sessions import SessionMiddleware
-from app.middleware.authorization import RoleBasedAccessControlMiddleware
 import os 
 from dotenv import load_dotenv
+
+from fastapi import FastAPI
+from starlette.middleware.sessions import SessionMiddleware
+
+from app.middleware.authorization import RoleBasedAccessControlMiddleware
 from app.db.base_class import Base
 from app.db.session import engine
+from app.routers import user,oauth,product
 
 
 load_dotenv() 
 app = FastAPI()
-# Add SessionMiddleware
+
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
 app.add_middleware(RoleBasedAccessControlMiddleware)
 

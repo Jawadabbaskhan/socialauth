@@ -12,17 +12,15 @@ from fastapi import Request
 
 @router.post("/refresh-token")
 async def refresh_token(request: Request):
-    # Retrieve the refresh token from cookies
+    
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
         raise HTTPException(status_code=401, detail="Refresh token missing")
 
-    # Generate new access token
     new_access_token = refresh_access_token(refresh_token)
     if not new_access_token:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
 
-    # Create response and set a new access token in cookies
     response = JSONResponse(content={"message": "Access token refreshed"})
     response.set_cookie(
         key="access_token", value=new_access_token, httponly=True, max_age=1800, secure=True

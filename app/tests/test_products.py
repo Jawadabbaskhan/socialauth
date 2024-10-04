@@ -22,7 +22,7 @@ def test_create_product():
     assert response.json()["name"] == "Test Product"
 
 def test_get_product():
-    product_id = 1  # Replace with a valid product ID
+    product_id = 1
     response = requests.get(f"{BASE_URL}/{product_id}", headers=HEADERS_NON_ADMIN)
     assert response.status_code == 200
     assert response.json()["id"] == product_id
@@ -33,7 +33,7 @@ def test_get_products():
     assert isinstance(response.json(), list)
 
 def test_update_product_admin():
-    product_id = 1  # Replace with a valid product ID
+    product_id = 1
     payload = {
         "name": "Updated Product",
         "description": "This is an updated test product",
@@ -44,7 +44,7 @@ def test_update_product_admin():
     assert response.json()["name"] == "Updated Product"
 
 def test_update_product_non_admin():
-    product_id = 1  # Replace with a valid product ID
+    product_id = 1
     payload = {
         "name": "Updated Product",
         "description": "This is an updated test product",
@@ -54,11 +54,11 @@ def test_update_product_non_admin():
     assert response.status_code == 401
 
 def test_delete_product_admin():
-    product_id = 1  # Replace with a valid product ID
+    product_id = 1
     response = requests.delete(f"{BASE_URL}/{product_id}", headers=HEADERS_ADMIN)
     assert response.status_code == 204
 
 def test_delete_product_non_admin():
-    product_id = 1  # Replace with a valid product ID
+    product_id = 1
     response = requests.delete(f"{BASE_URL}/{product_id}", headers=HEADERS_NON_ADMIN)
     assert response.status_code == 401
