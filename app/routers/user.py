@@ -15,6 +15,19 @@ router = APIRouter()
 
 @router.post("/register/", response_model=UserOut)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
+    """
+    Registers a new user.
+
+    Parameters:
+    - user (UserCreate): The user data to create.
+    - db (Session): The database session dependency.
+
+    Returns:
+    - UserOut: The created user.
+
+    Raises:
+    - HTTPException: If the email is already registered.
+    """
     db_user = get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -22,6 +35,19 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/oauth-register/", response_model=UserOut)
 def oauth_register_user(oauth_user: OAuthUserCreate, db: Session = Depends(get_db)):
+    """
+    Registers a new OAuth user.
+
+    Parameters:
+    - oauth_user (OAuthUserCreate): The OAuth user data to create.
+    - db (Session): The database session dependency.
+
+    Returns:
+    - UserOut: The created OAuth user.
+
+    Raises:
+    - HTTPException: If the email is already registered.
+    """
     db_user = get_user_by_email(db, email=oauth_user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -30,7 +56,19 @@ def oauth_register_user(oauth_user: OAuthUserCreate, db: Session = Depends(get_d
 
 @router.get("/users/")
 async def get_users(request: Request, db: Session = Depends(get_db)):
-    
+    """
+    Retrieves a list of all users.
+
+    Parameters:
+    - request (Request): The incoming HTTP request.
+    - db (Session): The database session dependency.
+
+    Returns:
+    - list[User]: A list of all users.
+
+    Raises:
+    - HTTPException: If the user is unauthorized.
+    """
     current_user = get_current_user_from_token(request)
     if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")

@@ -9,7 +9,33 @@ from app.core.config import settings
 
 
 class RoleBasedAccessControlMiddleware(BaseHTTPMiddleware):
+    """
+    Middleware for role-based access control.
+
+    Methods:
+    - dispatch(request: Request, call_next): Handles incoming requests and enforces role-based access control.
+
+    Attributes:
+    - no_auth_urls (list): List of URLs that do not require authentication.
+    """
     async def dispatch(self, request: Request, call_next):
+        """
+        Handles incoming requests and enforces role-based access control.
+
+        Parameters:
+        - request (Request): The incoming HTTP request.
+        - call_next (function): The next middleware or route handler.
+
+        Returns:
+        - Response: The HTTP response.
+
+        Details:
+        - Allows requests to certain URLs without authentication.
+        - Checks for a Bearer token in the Authorization header.
+        - Decodes the JWT token and extracts user information.
+        - Verifies the user's existence and role.
+        - Enforces role-based access control for specific routes.
+        """
         no_auth_urls = [
             "/token",
             "/docs",

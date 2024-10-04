@@ -18,12 +18,42 @@ router = APIRouter()
 
 @router.get("/login/google")
 async def google_login(request: Request):
+    """
+    Initiates the Google OAuth login process.
+
+    Parameters:
+    - request (Request): The incoming HTTP request.
+
+    Returns:
+    - Response: A redirect response to the Google OAuth authorization URL.
+    """
     redirect_uri = request.url_for('google_callback')
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
 @router.get("/callback")
 async def google_callback(request: Request, db: Session = Depends(get_db)):
+    """
+    Handles the Google OAuth callback.
+
+    Parameters:
+    - request (Request): The incoming HTTP request.
+    - db (Session): The database session dependency.
+
+    Returns:
+    - JSONResponse: A response with user information and authentication cookies.
+
+    Details:
+    - Authorizes the access token using the Google OAuth provider.
+    - Retrieves user information from Google.
+    - Checks if the user exists in the database; if not, creates a new user.
+    - Generates access, refresh, and CSRF tokens.
+    - Sets the tokens as HTTP-only cookies in the response.
+    - Returns a JSON response with user information.
+
+    Raises:
+    - HTTPException: If OAuth authentication fails.
+    """
     try:
         token = await oauth.google.authorize_access_token(request)
         user_info = await oauth.google.userinfo(token=token)
@@ -53,10 +83,6 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
                     "email": user.email,
                     "role": user.role
                 },
-                "token": {
-                    "access_token": access_token,
-                    "refresh_token": refresh_token
-                }
             }
         )
         
@@ -94,12 +120,18 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
 
 
     except Exception as e:
-        print("OAuth Error:", str(e))  # Debugging line
+        print("OAuth Error:", str(e))
         raise HTTPException(status_code=400, detail="OAuth authentication failed")
 
 
 @router.post("/logout")
 async def logout():
+    """
+    Logs out the user by deleting authentication cookies.
+
+    Returns:
+    - JSONResponse: A response indicating successful logout.
+    """
     response = JSONResponse(content={"message": "Logged out successfully"})
     response.delete_cookie(key="access_token")
     response.delete_cookie(key="refresh_token")

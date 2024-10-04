@@ -7,7 +7,7 @@ class UserBase(BaseModel):
     email: EmailStr
 
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=8)  # Only required for password-based registration
+    password: str = Field(..., min_length=8)
 
 
 class OAuthUserCreate(BaseModel):

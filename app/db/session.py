@@ -9,6 +9,15 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 
 def get_db():
+    """
+    Provides a database session.
+
+    Yields:
+    - Session: A SQLAlchemy database session.
+
+    Ensures:
+    - The session is closed after use.
+    """
     db = SessionLocal()
     try:
         yield db
