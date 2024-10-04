@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from app.routers import student
 from app.routers import user,oauth,product
 
 from starlette.middleware.sessions import SessionMiddleware
@@ -18,8 +17,7 @@ app.add_middleware(RoleBasedAccessControlMiddleware)
 
 Base.metadata.create_all(bind=engine)
 
-# Include the student router
-# app.include_router(student.router, prefix="/api/students", tags=["students"])
+
 app.include_router(user.router, prefix="/api/v1/users", tags=["users"])
 app.include_router(oauth.router, prefix="/api/v1/oauth", tags=["oauth"])
 app.include_router(product.router, prefix="/api/v1/products", tags=["products"])
